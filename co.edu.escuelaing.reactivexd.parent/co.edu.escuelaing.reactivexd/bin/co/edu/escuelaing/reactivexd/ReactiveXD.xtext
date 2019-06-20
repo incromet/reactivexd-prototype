@@ -73,8 +73,7 @@ MSig:
 ;
 
 Location:
-	"localhost" | 
-	(INT '.' (INT '.' (INT '.')?)?)? (INT | ANY  | '[' INT '-' INT ']') 
+	"localhost" | (INT '.' (INT '.' (INT '.')?)?)? (INT | ANY  | '[' INT '-' INT ']') 
 ;
 
 terminal ANY:
