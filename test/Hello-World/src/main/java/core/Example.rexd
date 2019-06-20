@@ -1,0 +1,20 @@
+/*
+ * This is an example model
+ */
+package core;
+
+	/*
+	 * These observables recognizes the characters sequence:
+	 */	
+
+	
+		
+	Observable<Event> obs = new Observable(call(* core.HelloWorld.helloMethod()));
+	
+	Observable<Event> obs2 = new Observable(call(* core.HelloWorld.answerMethod()));
+	
+	reaction after automatonConstructor.firstState{
+		System.out.println(core.State);
+	}
+	
+}
