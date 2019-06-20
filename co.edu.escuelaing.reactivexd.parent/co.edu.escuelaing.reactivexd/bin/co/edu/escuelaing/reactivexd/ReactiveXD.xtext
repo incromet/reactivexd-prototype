@@ -1,9 +1,82 @@
-grammar co.edu.escuelaing.reactivexd.ReactiveXD with org.eclipse.xtext.common.Terminals
+grammar co.edu.escuelaing.reactivexd.ReactiveXD with org.eclipse.xtext.xbase.Xbase
 
-generate reactiveXD "http://www.edu.co/escuelaing/reactivexd/ReactiveXD"
+import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
+
+generate reactiveXD "http://www.escuelaing.edu.co/reactivexd/ReactiveXD"
 
 Model:
-	greetings+=Greeting*;
+	('package' name = QualifiedName ->';'?)?
+	importSection = XImportSection?
+	typeDeclaration += Decl*
+;
 	
-Greeting:
-	'Hello' name=ID '!';
+Decl:
+	ObsrvDecl | MSig
+;
+
+ObsrvDecl:
+	'Observable' '<' type=EventType '>' name=ID '=' assignment=ObsrvAssig
+;
+
+ObsrvAssig:
+	{ObsrvAssig} 'new' 'Observable' '(' props+=OrEvent* ')' ';'
+;
+
+enum EventType:
+	Event
+;
+
+OrEvent returns EventExpression:
+	AndEvent ({OrEvent.left=current} op='||' right=AndEvent)*
+;
+
+AndEvent returns EventExpression:
+	NotEvent ({AndEvent.left=current} op='&&' right=NotEvent)*
+;
+
+NotEvent returns EventExpression:
+	AtomEvent | UnaryExpresion
+;
+
+AtomEvent returns EventExpression:
+	eventType=EventPredicate
+;
+
+UnaryExpresion returns EventExpression:{UnaryEvent}
+	op='!' expr=AtomEvent
+;
+
+EventPredicate:
+	Trigger | KindAttribute
+;
+
+Trigger:
+	triggerType=TPrefix '(' (returndef=TypeReturn)? esig=QualifiedName '(' (params+=JvmTypeReference 
+		(',' params+=JvmTypeReference)* )? ')' ')'
+;
+
+enum TPrefix:
+	call 
+;
+
+TypeReturn returns JVMTYPE:
+	astk=ANY | jvmRef=JvmTypeReference
+;
+	
+KindAttribute:
+	locat=Location
+;
+
+MSig:
+	'op' name=ValidID '(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')' (':' type=JvmTypeReference)? 
+		body=XBlockExpression
+;
+
+Location:
+	"localhost" | 
+	(INT '.' (INT '.' (INT '.')?)?)? (INT | ANY  | '[' INT '-' INT ']') 
+;
+
+terminal ANY:
+	'*'
+;
