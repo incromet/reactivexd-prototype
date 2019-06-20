@@ -1,0 +1,9 @@
+grammar co.edu.escuelaing.reactivexd.ReactiveXD with org.eclipse.xtext.common.Terminals
+
+generate reactiveXD "http://www.edu.co/escuelaing/reactivexd/ReactiveXD"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
