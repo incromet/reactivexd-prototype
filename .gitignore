@@ -1,0 +1,12 @@
+tmp
+bin
+target
+generated
+generated-sources
+src-gen
+xtend-gen
+model
+*.xml_gen
+*.java._trace
+*.DS_Store
+Logs
